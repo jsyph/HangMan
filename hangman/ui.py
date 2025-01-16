@@ -1,4 +1,4 @@
-import ascii
+import hangman.ascii as ascii
 
 
 class UI:

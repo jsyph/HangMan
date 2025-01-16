@@ -1,5 +1,5 @@
-from dictionary import Dictionary
-from ui import UI
+from hangman.dictionary import Dictionary
+from hangman.ui import UI
 
 
 def is_complete(current: list[str]) -> bool:
@@ -60,6 +60,3 @@ def main():
 
     ui.print_win()
 
-
-if __name__ == "__main__":
-    main()

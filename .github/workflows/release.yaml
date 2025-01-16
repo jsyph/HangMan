@@ -1,0 +1,49 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    # Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build setuptools
+
+    # Build the Python project
+    - name: Build the project
+      run: python -m build
+
+    # Upload artifacts (optional for debugging purposes)
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist-files
+        path: dist/
+
+    # Create a new GitHub release and upload the dist files
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: dist/*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
+        body: |
+          Automatically generated release for commit: ${{ github.sha }}

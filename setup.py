@@ -13,7 +13,7 @@ setup(
     package_data={
         "hangman": ["dictionary.json"],
     },
-    install_requires=[],
+    install_requires=["setuptools"],
     entry_points={
         "console_scripts": [
             "hangman=hangman:main",

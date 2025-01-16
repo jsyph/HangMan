@@ -29,16 +29,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install build setuptools
 
-    # Step 4: Extract version from setup.py
+    # Step 4: Extract version using importlib.metadata
     - name: Extract package version
       id: extract_version
       run: |
         python -c "
-import runpy
-setup_cfg = runpy.run_path('setup.py')
-version = setup_cfg.get('version', 'unknown')
-print(f'::set-output name=version::{version}')
-        "
+from importlib.metadata import version
+print(f'version={version(\"your_package_name\")}', end='')
+        " >> $GITHUB_ENV
 
     # Step 5: Build the Python project
     - name: Build the project
@@ -50,7 +48,7 @@ print(f'::set-output name=version::{version}')
       with:
         artifacts: dist/*
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: v${{ steps.extract_version.outputs.version }}
-        name: Release v${{ steps.extract_version.outputs.version }}
+        tag: v${{ env.version }}
+        name: Release v${{ env.version }}
         body: |
           Automatically generated release for commit: ${{ github.sha }}

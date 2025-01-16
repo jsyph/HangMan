@@ -5,50 +5,45 @@ on:
     branches:
       - master
 
-permissions:
-  contents: write
-
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the repository
+    # Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python
+    # Set up Python
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    # Step 3: Install dependencies
+    # Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install build setuptools
 
-    # Step 4: Extract version using importlib.metadata
-    - name: Extract package version
-      id: extract_version
-      run: |
-        python -c "
-from importlib.metadata import version
-print(f'version={version(\"your_package_name\")}', end='')
-        " >> $GITHUB_ENV
-
-    # Step 5: Build the Python project
+    # Build the Python project
     - name: Build the project
       run: python -m build
 
-    # Step 6: Create Release
+    # Upload artifacts (optional for debugging purposes)
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist-files
+        path: dist/
+
+    # Create a new GitHub release and upload the dist files
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
         artifacts: dist/*
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: v${{ env.version }}
-        name: Release v${{ env.version }}
+        tag: Relase ${{ github.run_number }}
+        name: Release ${{ github.run_number }}
         body: |
           Automatically generated release for commit: ${{ github.sha }}

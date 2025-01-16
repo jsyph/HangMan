@@ -37,13 +37,14 @@ jobs:
         name: dist-files
         path: dist/
 
-    # Create a new GitHub release and upload the dist files
-    - name: Create Release
+    # Step 6: Create Draft Release
+    - name: Create Draft Release
       uses: ncipollo/release-action@v1
       with:
         artifacts: dist/*
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: r${{ github.run_number }}
-        name: Release ${{ github.run_number }}
+        tag: v${{ env.version }}
+        name: Release v${{ env.version }}
         body: |
           Automatically generated release for commit: ${{ github.sha }}
+        draft: true

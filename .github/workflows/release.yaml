@@ -43,8 +43,8 @@ jobs:
       with:
         artifacts: dist/*
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: v${{ env.version }}
-        name: Release v${{ env.version }}
+        tag: r${{ github.run_number }}
+        name: Release ${{ github.run_number }}
         body: |
           Automatically generated release for commit: ${{ github.sha }}
         draft: true
